@@ -20,13 +20,21 @@ export class CandidataService{
 
 //Procurar tudo
 async findAll(): Promise<Candidata[]>{
-    return await this.candidataRepository.find({})
+    return await this.candidataRepository.find({
+         relations:{
+            oportunidade: true
+        }
+    })
 }  
 
 //Procurar por ID
 async findById(id: number): Promise<Candidata>{
     const candidata = await this.candidataRepository.findOne({
-        where:{id}
+        where:{id},
+        relations:{
+            oportunidade: true
+        }
+        
     });
 
     if(!candidata){
@@ -39,7 +47,10 @@ async findById(id: number): Promise<Candidata>{
 //Procurar por Nome
 async findByNome(nome: string): Promise<Candidata[]>{
     return await this.candidataRepository.find({
-        where:{ nome: ILike(`%${nome}`)}
+        where:{ nome: ILike(`%${nome}`)},
+         relations:{
+            oportunidade: true
+        }
     })
 }
 
@@ -47,21 +58,30 @@ async findByNome(nome: string): Promise<Candidata[]>{
 //Procurar por Experiencia 
 async findByNivelExperiencia(nivel_experiencia: NivelExperiencia): Promise<Candidata[]> {
 return await this.candidataRepository.find({
-  where: {nivel_experiencia}
+  where: {nivel_experiencia},
+   relations:{
+            oportunidade: true
+        }
 });
 }
 
 // Procurar Candidata por Localização
 async findByLocalizacao(localizacao: string): Promise<Candidata[]> {
 return await this.candidataRepository.find({
-    where: { localizacao: ILike(`%${localizacao}%`) }
+    where: { localizacao: ILike(`%${localizacao}%`) },
+     relations:{
+            oportunidade: true
+        }
 });
 }
 
 //Procurar Candidata por Area de atuação
 async findByDisponibilidade( disponibilidade: Disponibilidade): Promise<Candidata[]>{
     return await this.candidataRepository.find({
-        where: {disponibilidade}
+        where: {disponibilidade},
+         relations:{
+            oportunidade: true
+        }
     });
 }
 

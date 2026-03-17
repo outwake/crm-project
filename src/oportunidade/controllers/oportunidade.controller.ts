@@ -4,10 +4,10 @@ import { TipoContrato } from "../enums/contrato.enum";
 import { ModalidadeTrabalho } from "../enums/modalidade.enum";
 import { CreateOportunidadeDto } from "../dto/create.oportunidade.dto";
 import { NivelExperiencia } from "../enums/nivel-experiencia.enum";
-import { JwtAuthGuard } from "../../auth/guard/jwt-auth.guard";
 
 
-@UseGuards(JwtAuthGuard)
+
+
 @Controller('/oportunidades')
 
 export class OportunidadeController{

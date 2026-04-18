@@ -2,9 +2,6 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DeleteResult, ILike, Repository } from "typeorm";
 import { Candidata } from "../entities/candidata.entity";
-import { CreateCandidataDto } from "../dto/create-candidata.dto";
-import { NivelExperiencia } from "../enum/nivel-expeciencia.enum";
-import { Disponibilidade } from "../enum/disponibilidade.enum";
 
 
 //O recomendado em tese seria criar um Many to Many entre candidata e oportunidade
@@ -26,7 +23,10 @@ async findAll(): Promise<Candidata[]>{
 //Procurar por ID
 async findById(id: number): Promise<Candidata>{
     const candidata = await this.candidataRepository.findOne({
-        where:{id}
+        where:{id},
+         relations:{
+            oportunidade: true
+        }
     });
 
     if(!candidata){
@@ -39,36 +39,47 @@ async findById(id: number): Promise<Candidata>{
 //Procurar por Nome
 async findByNome(nome: string): Promise<Candidata[]>{
     return await this.candidataRepository.find({
-        where:{ nome: ILike(`%${nome}`)}
+        where:{ nome: ILike(`%${nome}`)},
+         relations:{
+            oportunidade: true
+        }
     })
 }
 
 
 //Procurar por Experiencia 
-async findByNivelExperiencia(nivel_experiencia: NivelExperiencia): Promise<Candidata[]> {
+async findByNivelExperiencia(nivel_experiencia: string): Promise<Candidata[]> {
 return await this.candidataRepository.find({
-  where: {nivel_experiencia}
+  where: {nivel_experiencia},
+   relations:{
+            oportunidade: true
+        }
 });
 }
 
 // Procurar Candidata por Localização
 async findByLocalizacao(localizacao: string): Promise<Candidata[]> {
 return await this.candidataRepository.find({
-    where: { localizacao: ILike(`%${localizacao}%`) }
+    where: { localizacao: ILike(`%${localizacao}%`) },
+     relations:{
+            oportunidade: true
+        }
 });
 }
 
 //Procurar Candidata por Area de atuação
-async findByDisponibilidade( disponibilidade: Disponibilidade): Promise<Candidata[]>{
+async findByDisponibilidade( disponibilidade: string): Promise<Candidata[]>{
     return await this.candidataRepository.find({
-        where: {disponibilidade}
+        where: {disponibilidade},
+        relations:{
+            oportunidade: true
+        }
     });
 }
 
 
 //Criação da Candidata
-async create(dto: CreateCandidataDto): Promise<Candidata>{
-    const candidata = this.candidataRepository.create(dto);
+async create(candidata: Candidata): Promise<Candidata>{
     return await this.candidataRepository.save(candidata);
 }
 

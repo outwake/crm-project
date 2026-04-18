@@ -2,10 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Oportunidade } from "../entities/oportunidade.entity";
 import { DeleteResult, ILike, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CreateOportunidadeDto } from "../dto/create.oportunidade.dto";
-import { NivelExperiencia } from "../enums/nivel-experiencia.enum";
-import { TipoContrato } from "../enums/contrato.enum";
-import { ModalidadeTrabalho } from "../enums/modalidade.enum";
+
 
 //O recomendado em tese seria criar um Many to Many entre candidata e oportunidade
 //criando assim uma nova tabela candidatura, porem isso iria fugir do escorpo
@@ -53,7 +50,7 @@ export class OportunidadeService{
 
     
   //Procurar por Modalidade  
-    async findByModalidade(modalidade: ModalidadeTrabalho): Promise<Oportunidade[]> {
+    async findByModalidade(modalidade: string): Promise<Oportunidade[]> {
     return await this.oportunidadeRepository.find({
       where: {modalidade},
        relations: ["usuario"]
@@ -69,14 +66,14 @@ export class OportunidadeService{
     }
 
   //Procurar por Tipo de Contrato  
-    async findByTipoContrato(tipoContrato: TipoContrato): Promise<Oportunidade[]> {
+    async findByTipoContrato(tipoContrato: string): Promise<Oportunidade[]> {
     return await this.oportunidadeRepository.find({
       where: {tipoContrato}
     });
     }
 
   //Procurar por Experiencia 
-    async findByNivelExperiencia(nivelExperiencia: NivelExperiencia): Promise<Oportunidade[]> {
+    async findByNivelExperiencia(nivelExperiencia: string): Promise<Oportunidade[]> {
     return await this.oportunidadeRepository.find({
       where: {nivelExperiencia}
     });
@@ -84,14 +81,13 @@ export class OportunidadeService{
 
     
   //Criar oportunidade
-    async create(dto: CreateOportunidadeDto): Promise<Oportunidade> {
-        const oportunidade = this.oportunidadeRepository.create(dto);
+    async create(oportunidade: Oportunidade): Promise<Oportunidade> {
         return await this.oportunidadeRepository.save(oportunidade);
     }
 
   //Atualizar 
-   async update(id: number, dto: CreateOportunidadeDto): Promise<Oportunidade> {
-     await this.oportunidadeRepository.update(id, dto);
+   async update(id: number, oportunidade: Oportunidade): Promise<Oportunidade> {
+     await this.oportunidadeRepository.update(id, oportunidade);
      return this.findById(id);
    }
 

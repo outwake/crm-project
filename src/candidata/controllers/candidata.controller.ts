@@ -1,12 +1,13 @@
 import { Body,Controller,Delete,Get,HttpCode,HttpStatus,Param,ParseIntPipe,Post,Put, UseGuards} from "@nestjs/common";
 import { CandidataService } from "../services/candidata.service";
 import { Candidata } from "../entities/candidata.entity";
-import { CreateCandidataDto } from "../dto/create-candidata.dto";
-import { NivelExperiencia } from "../enum/nivel-expeciencia.enum";
-import { Disponibilidade } from "../enum/disponibilidade.enum";
 import { JwtAuthGuard } from "../../auth/guard/jwt-auth.guard";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
 
+@ApiTags('Candidata')
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 @Controller("/candidatas")
 export class CandidataController {
 
@@ -35,7 +36,7 @@ export class CandidataController {
 
   // Buscar por nível de experiência
   @UseGuards(JwtAuthGuard)
-  @Get("/experiencia/:nivel") async findByNivelExperiencia(@Param("nivel") nivel: NivelExperiencia): Promise<Candidata[]> {
+  @Get("/experiencia/:nivel") async findByNivelExperiencia(@Param("nivel") nivel: string): Promise<Candidata[]> {
     return this.candidataService.findByNivelExperiencia(nivel);
   }
 
@@ -48,15 +49,15 @@ export class CandidataController {
   // Buscar por disponibilidade
   @UseGuards(JwtAuthGuard)
   @Get("/disponibilidade/:disponibilidade")
-  async findByDisponibilidade(@Param("disponibilidade") disponibilidade: Disponibilidade): Promise<Candidata[]> {
+  async findByDisponibilidade(@Param("disponibilidade") disponibilidade: string): Promise<Candidata[]> {
     return this.candidataService.findByDisponibilidade(disponibilidade);
   }
 
   // Criar candidata
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() dto: CreateCandidataDto): Promise<Candidata> {
-    return this.candidataService.create(dto);
+  async create(@Body() candidata: Candidata): Promise<Candidata> {
+    return this.candidataService.create(candidata);
   }
 
   // Atualizar candidata

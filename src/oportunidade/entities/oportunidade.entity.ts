@@ -1,9 +1,8 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { NivelExperiencia } from "../enums/nivel-experiencia.enum";
-import { ModalidadeTrabalho } from "../enums/modalidade.enum";
-import { TipoContrato } from "../enums/contrato.enum";
 import { Candidata } from "../../candidata/entities/candidata.entity";
 import { Usuario } from "../../usuario/entities/usuario.entity";
+import { ApiProperty } from "@nestjs/swagger";
+
 
 
 @Entity({name: "tb_oportunidades"})
@@ -12,69 +11,76 @@ export class Oportunidade{
 
   //Criação do ID
   @PrimaryGeneratedColumn()
+  @ApiProperty()  
   id: number;
 
   //Criação de Titulo
   @Column({ length: 120 })
+  @ApiProperty()  
   titulo: string;
 
   //Criação da Empresa
   @Column({ length: 120 })
+  @ApiProperty()  
   empresa: string;
 
   //Criação de Área
   @Column({ length: 100 })
+  @ApiProperty()  
   area: string;
 
   //Criação de Descrição
   @Column({ type: 'text' })
+  @ApiProperty()  
   descricao: string;
 
   //Modalidade de trabalho
-  @Column({ type: 'enum',
-    enum : TipoContrato
-   })
-  tipoContrato: TipoContrato; 
+  @Column({ length: 100 })
+  @ApiProperty()  
+  tipoContrato: string; 
   // CLT | PJ | Freelancer | Estágio
 
-  @Column({
-  type: 'enum',
-  enum: ModalidadeTrabalho
-  })
-  modalidade: ModalidadeTrabalho;
+  @Column({ length: 100 })
+  @ApiProperty()  
+  modalidade: string;
   // Presencial | Híbrido | Remoto
 
   //Salário
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  @ApiProperty()  
   salario: number;
 
   //Localização
   @Column({ length: 100 })
+  @ApiProperty()  
   localizacao: string;
 
 
   //Nivel de EXPERIENCIA
-  @Column({
-  type: 'enum',
-  enum: NivelExperiencia
-  })
-  nivelExperiencia: NivelExperiencia;
+  @Column({ length: 100 })
+  @ApiProperty()  
+  nivelExperiencia: string;
   // Junior | Pleno | Senior
 
   @Column({ type: 'text', nullable: true })
+  @ApiProperty()  
   beneficios: string;
 
   @Column({ default: true })
+  @ApiProperty()  
   ativa: boolean;
 
   @CreateDateColumn()
+  @ApiProperty()  
   dataCriacao: Date;
 
   @UpdateDateColumn()
+  @ApiProperty()  
   dataAtualizacao: Date;
 
 
   //Relacionamento com Candidata
+  @ApiProperty()  
   @ManyToOne(()=> Candidata, (candidata)=> candidata.oportunidade,{
     onDelete: "CASCADE"
   })
@@ -82,6 +88,7 @@ export class Oportunidade{
 
   //Relacionamento Usuário
 
+  @ApiProperty()  
   @ManyToOne(() => Usuario, (usuario) => usuario.oportunidade,{
     onDelete: "CASCADE"
   } )

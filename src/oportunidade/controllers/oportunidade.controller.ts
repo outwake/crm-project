@@ -1,13 +1,12 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseGuards } from "@nestjs/common";
 import { OportunidadeService } from "../services/oportunidade.service";
-import { TipoContrato } from "../enums/contrato.enum";
-import { ModalidadeTrabalho } from "../enums/modalidade.enum";
-import { CreateOportunidadeDto } from "../dto/create.oportunidade.dto";
-import { NivelExperiencia } from "../enums/nivel-experiencia.enum";
 import { JwtAuthGuard } from "../../auth/guard/jwt-auth.guard";
+import { Oportunidade } from "../entities/oportunidade.entity";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
-
+@ApiTags('Oportunidade')
 @UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 @Controller('/oportunidades')
 
 export class OportunidadeController{
@@ -33,7 +32,7 @@ export class OportunidadeController{
 
   // Buscar por modalidade
   @Get('/modalidade/:modalidade')
-  findByModalidade(@Param('modalidade') modalidade: ModalidadeTrabalho) {
+  findByModalidade(@Param('modalidade') modalidade: string) {
     return this.oportunidadeService.findByModalidade(modalidade);
   }
 
@@ -45,31 +44,31 @@ export class OportunidadeController{
 
   // Buscar por tipo de contrato
   @Get('/contrato/:tipoContrato')
-  findByTipoContrato(@Param('tipoContrato') tipoContrato: TipoContrato) {
+  findByTipoContrato(@Param('tipoContrato') tipoContrato: string) {
     return this.oportunidadeService.findByTipoContrato(tipoContrato);
   }
 
   // Buscar por nível de experiência
   @Get('/experiencia/:nivelExperiencia')
   findByNivelExperiencia(
-    @Param('nivelExperiencia') nivelExperiencia: NivelExperiencia,
+    @Param('nivelExperiencia') nivelExperiencia: string,
   ) {
     return this.oportunidadeService.findByNivelExperiencia(nivelExperiencia);
   }
 
   // Criar oportunidade
   @Post()
-  create(@Body() dto: CreateOportunidadeDto) {
-    return this.oportunidadeService.create(dto);
+  create(@Body() oportunidade: Oportunidade) {
+    return this.oportunidadeService.create(oportunidade);
   }
 
   // Atualizar oportunidade
   @Put('/:id')
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() dto: CreateOportunidadeDto,
+    @Body() oportunidade:Oportunidade,
   ) {
-    return this.oportunidadeService.update(id, dto);
+    return this.oportunidadeService.update(id, oportunidade);
   }
 
   // Deletar oportunidade

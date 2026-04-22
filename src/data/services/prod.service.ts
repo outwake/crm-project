@@ -18,4 +18,5 @@ export class ProdService implements TypeOrmOptionsFactory {
       autoLoadEntities: true,
     };
   }
+  
 }

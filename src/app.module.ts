@@ -14,7 +14,7 @@ import { ProdService } from './data/services/prod.service';
 @Module({
   imports: [ConfigModule.forRoot(),
   TypeOrmModule.forRootAsync({
-	useClass: ProdService,
+	useClass: DevService,
   imports: [ConfigModule],
 }),
  OportunidadeModule, UsuarioModule, CandidataModule, AuthModule],

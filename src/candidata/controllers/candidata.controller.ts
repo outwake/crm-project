@@ -1,4 +1,4 @@
-import { Body,Controller,Delete,Get,HttpCode,HttpStatus,Param,ParseIntPipe,Post,Put, UseGuards} from "@nestjs/common";
+import { Body,Controller,Delete,Get,HttpCode,HttpStatus,Param,ParseIntPipe,Post,Put, Req, UseGuards} from "@nestjs/common";
 import { CandidataService } from "../services/candidata.service";
 import { Candidata } from "../entities/candidata.entity";
 import { JwtAuthGuard } from "../../auth/guard/jwt-auth.guard";
@@ -6,17 +6,19 @@ import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
 
 @ApiTags('Candidata')
+@ApiBearerAuth()
 @Controller("/candidatas")
 export class CandidataController {
 
   constructor(private readonly candidataService: CandidataService) {}
 
   // Buscar todas candidatas
-  @UseGuards(JwtAuthGuard)
-  @Get()
-  async findAll(): Promise<Candidata[]> {
-    return this.candidataService.findAll();
-  }
+@Get()
+@UseGuards(JwtAuthGuard)
+async findAll(@Req() req): Promise<Candidata[]> {
+  console.log("USER LOGADO:", req.user);
+  return this.candidataService.findAll();
+}
 
   // Buscar candidata por ID
   @UseGuards(JwtAuthGuard)

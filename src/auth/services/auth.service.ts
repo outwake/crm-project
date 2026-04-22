@@ -15,13 +15,17 @@ export class AuthService{
         private bcrypt: Bcrypt
     ){ }
 
-    async validateUser(username: string, password: string): Promise<any> {
+   async validateUser(username: string, password: string): Promise<any> {
+
+  console.log("USERNAME:", username);
 
   // 🔎 tenta encontrar recrutador
   const usuario = await this.usuarioService.findByUsuario(username);
+  console.log("USUARIO:", usuario);
 
   if (usuario) {
     const match = await this.bcrypt.compararSenhas(password, usuario.senha);
+    console.log("RECRUTADOR PASSWORD MATCH:", match);
 
     if (match) {
       const { senha, ...resposta } = usuario;
@@ -31,9 +35,11 @@ export class AuthService{
 
   // 🔎 tenta encontrar candidata
   const candidata = await this.candidataService.findByEmail(username);
+  console.log("CANDIDATA:", candidata);
 
   if (candidata) {
     const match = await this.bcrypt.compararSenhas(password, candidata.senha);
+    console.log("CANDIDATA PASSWORD MATCH:", match);
 
     if (match) {
       const { senha, ...resposta } = candidata;
@@ -61,7 +67,7 @@ export class AuthService{
     nome: user.nome,
     usuario: usuarioLogin.usuario,
     tipo: user.tipo,
-    token: `Bearer ${this.jwtService.sign(payload)}`
+    token: this.jwtService.sign(payload)
   };
 }
 }

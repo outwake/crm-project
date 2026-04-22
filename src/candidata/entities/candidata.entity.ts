@@ -23,6 +23,11 @@ export class Candidata{
   @Column({ length: 120, unique: true })
   email: string;
 
+  //Senha
+  @ApiProperty()
+  @Column({ length: 255 })
+  senha: string;
+
   // Telefone
   @ApiProperty()
   @Column({ length: 20 })

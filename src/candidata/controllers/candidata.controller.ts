@@ -6,8 +6,6 @@ import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
 
 @ApiTags('Candidata')
-@UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
 @Controller("/candidatas")
 export class CandidataController {
 

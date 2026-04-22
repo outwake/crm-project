@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DeleteResult, ILike, Repository } from "typeorm";
 import { Candidata } from "../entities/candidata.entity";
+import { Bcrypt } from "../../auth/bcrypt/bcrypt";
 
 
 //O recomendado em tese seria criar um Many to Many entre candidata e oportunidade
@@ -10,9 +11,10 @@ import { Candidata } from "../entities/candidata.entity";
 @Injectable()
 
 export class CandidataService{
-    constructor(
-        @InjectRepository(Candidata)
-        private candidataRepository: Repository<Candidata>,
+  constructor(
+  @InjectRepository(Candidata)
+  private readonly candidataRepository: Repository<Candidata>,
+  private readonly bcrypt: Bcrypt
     ){}
 
 //Procurar tudo
@@ -35,7 +37,14 @@ async findById(id: number): Promise<Candidata>{
 
     return candidata;
 }
-
+//Produrar por Email
+ async findByEmail(email: string): Promise<Candidata | null> {
+        return await this.candidataRepository.findOne({
+            where: {
+                email: email
+            }
+        })
+    }
 //Procurar por Nome
 async findByNome(nome: string): Promise<Candidata[]>{
     return await this.candidataRepository.find({
@@ -79,15 +88,21 @@ async findByDisponibilidade( disponibilidade: string): Promise<Candidata[]>{
 
 
 //Criação da Candidata
-async create(candidata: Candidata): Promise<Candidata>{
-    return await this.candidataRepository.save(candidata);
+async create(candidata: Candidata): Promise<Candidata> {
+  candidata.senha = await this.bcrypt.criptografarSenha(candidata.senha);
+  return this.candidataRepository.save(candidata);
 }
 
 //Atualização de Candidata
-async update(id:number, candidata: Candidata): Promise<Candidata>{
-    await this.findById(id);
-    candidata.id = id;
-    return await this.candidataRepository.save(candidata);
+async update(id: number, candidata: Candidata): Promise<Candidata> {
+  await this.findById(id);
+
+  if (candidata.senha) {
+    candidata.senha = await this.bcrypt.criptografarSenha(candidata.senha);
+  }
+
+  candidata.id = id;
+  return this.candidataRepository.save(candidata);
 }
 
 async remove(id: number): Promise<DeleteResult>{

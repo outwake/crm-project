@@ -70,6 +70,10 @@ export class Oportunidade{
   @ApiProperty()  
   ativa: boolean;
 
+  @Column({ length: 20, default: 'DISPONIVEL' })
+  @ApiProperty()
+  status: string; // novo campo
+
   @CreateDateColumn()
   @ApiProperty()  
   dataCriacao: Date;

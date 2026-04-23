@@ -91,6 +91,13 @@ export class OportunidadeService{
      return this.findById(id);
    }
 
+   // Atualizar Parcialmente
+  async partialUpdate(id: number, oportunidade: Partial<Oportunidade>): Promise<Oportunidade> {
+  await this.findById(id); // valida se existe
+  await this.oportunidadeRepository.update(id, oportunidade);
+  return this.findById(id);
+  }
+
    //Deletar
     async remove(id: number): Promise<DeleteResult>{
         await this.findById(id);

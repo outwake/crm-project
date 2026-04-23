@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, UseGuards } from "@nestjs/common";
 import { OportunidadeService } from "../services/oportunidade.service";
 import { JwtAuthGuard } from "../../auth/guard/jwt-auth.guard";
 import { Oportunidade } from "../entities/oportunidade.entity";
@@ -71,6 +71,15 @@ export class OportunidadeController{
     return this.oportunidadeService.update(id, oportunidade);
   }
 
+  // Atualizar Parcialmente
+  @Patch('/:id')
+  partialUpdate(
+  @Param('id', ParseIntPipe) id: number,
+  @Body() oportunidade: Partial<Oportunidade>,
+  ) {
+  return this.oportunidadeService.partialUpdate(id, oportunidade);
+  }
+  
   // Deletar oportunidade
   @Delete('/:id')
   remove(@Param('id', ParseIntPipe) id: number) {

@@ -82,8 +82,9 @@ export class OportunidadeService{
     
   //Criar oportunidade
     async create(oportunidade: Oportunidade): Promise<Oportunidade> {
-        return await this.oportunidadeRepository.save(oportunidade);
-    }
+    const { id, ...dados } = oportunidade;
+    return await this.oportunidadeRepository.save(dados);
+  }
 
   //Atualizar 
    async update(id: number, oportunidade: Oportunidade): Promise<Oportunidade> {
